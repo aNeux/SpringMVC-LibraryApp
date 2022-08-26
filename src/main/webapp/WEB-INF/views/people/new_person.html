@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Добавление читателя</title>
+    </head>
+
+    <body>
+    <form th:method="POST" th:action="@{/people}" th:object="${person}">
+        <label for="last_name">Фамилия:</label>
+        <input id="last_name" type="text" th:field="*{lastName}" style="margin-top: 5px;">
+        <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+        <br/>
+        <label for="first_name">Имя:</label>
+        <input id="first_name" type="text" th:field="*{firstName}" style="margin-top: 5px;">
+        <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+        <br/>
+        <label for="second_name">Отчество:</label>
+        <input id="second_name" type="text" th:field="*{secondName}" style="margin-top: 5px;">
+        <div style="color:red" th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}"></div>
+        <br/>
+        <label for="birth_year">Год рождения:</label>
+        <input id="birth_year" type="text" th:field="*{birthYear}" style="margin-top: 5px;">
+        <div style="color:red" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}"></div>
+        <div style="color:red" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></div>
+        <br/>
+        <input type="submit" value="Добавить" style="margin-top: 10px;">
+    </form>
+    </body>
+</html>
