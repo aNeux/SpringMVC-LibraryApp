@@ -7,24 +7,22 @@ import javax.validation.constraints.Pattern;
 public class Person {
     private int id;
 
-    @NotNull
     @Pattern(regexp = "[а-яА-Я]{2,50}", message = "Имя должно включать от 2 до 50 русских символов")
     private String firstName;
 
-    @NotNull
     @Pattern(regexp = "[а-яА-Я]{2,50}", message = "Отчество должно включать от 2 до 50 русских символов")
     private String secondName;
 
-    @NotNull
     @Pattern(regexp = "[а-яА-Я]{2,50}", message = "Фамилия должна включать от 2 до 50 русских символов")
     private String lastName;
 
+    @NotNull(message = "Год рождения должен быть указан")
     @Min(value = 1920, message = "Год рождения не может быть меньше 1920")
-    private int birthYear;
+    private Integer birthYear;
 
     public Person() { }
 
-    public Person(int id, String firstName, String secondName, String lastName, int birthYear) {
+    public Person(int id, String firstName, String secondName, String lastName, Integer birthYear) {
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
@@ -68,11 +66,11 @@ public class Person {
         return String.format("%s %s %s", firstName, secondName, lastName);
     }
 
-    public int getBirthYear() {
+    public Integer getBirthYear() {
         return birthYear;
     }
 
-    public void setBirthYear(int birthYear) {
+    public void setBirthYear(Integer birthYear) {
         this.birthYear = birthYear;
     }
 }

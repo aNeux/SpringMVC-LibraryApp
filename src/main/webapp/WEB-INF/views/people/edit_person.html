@@ -18,11 +18,11 @@
             <label for="second_name">Отчество:</label>
             <input id="second_name" type="text" th:field="*{secondName}" style="margin-top: 5px;">
             <div style="color:red" th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}"></div>
+            <div style="color:red" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></div>
             <br/>
             <label for="birth_year">Год рождения:</label>
             <input id="birth_year" type="text" th:field="*{birthYear}" style="margin-top: 5px;">
             <div style="color:red" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}"></div>
-            <div style="color:red" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></div>
             <br/>
             <input type="submit" value="Редактировать" style="margin-top: 10px;">
         </form>

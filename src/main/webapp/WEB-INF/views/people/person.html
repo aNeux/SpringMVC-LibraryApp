@@ -6,13 +6,13 @@
     </head>
 
     <body>
-        <p th:text="${person.getFullName() + ', ' + person.getBirthYear()}"></p>
+        <p th:text="${person.getFullName() + ', ' + person.getBirthYear() + ' г.р.'}"></p>
         <p th:if="${books.isEmpty()}">Человек пока не взял ни одной книги</p>
         <div th:if="${!books.isEmpty()}">
             <hr/>
-            <b>Книги:</b>
+            <b>Выданные книги:</b>
             <div th:each="book : ${books}" style="margin-top: -10px;">
-                <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getPublishingYear()}"></p>
+                <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ' (' + book.getPublishingYear() + ')'}"></p>
             </div>
         </div>
         <hr/>
