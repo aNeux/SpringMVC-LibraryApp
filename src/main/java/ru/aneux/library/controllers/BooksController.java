@@ -18,6 +18,7 @@ import javax.validation.Valid;
 public class BooksController {
     private final BookDAO bookDAO;
     private final BookValidator bookValidator;
+
     private final PersonDAO personDAO;
 
     @Autowired
@@ -35,7 +36,7 @@ public class BooksController {
 
     @GetMapping("/{id}")
     public String showBook(@PathVariable("id") int id, Model model) {
-        // FIXME: For some reason using @ModelAttribute annotation for Person object here change the default selection in drop-down
+        // FIXME: For some reason using @ModelAttribute annotation for Person object here change the default selection in the drop-down menu
         model.addAttribute("person", new Person());
 
         model.addAttribute("book", bookDAO.getBook(id));
@@ -45,6 +46,18 @@ public class BooksController {
         else
             model.addAttribute("people", personDAO.getPeople());
         return "books/book";
+    }
+
+    @PatchMapping("/{id}/assign")
+    public String assignBook(@PathVariable("id") int bookId, @ModelAttribute("person") Person person) {
+        bookDAO.assignBook(bookId, person.getId());
+        return "redirect:/books/" + bookId;
+    }
+
+    @PatchMapping("/{id}/release")
+    public String releaseBook(@PathVariable("id") int id) {
+        bookDAO.releaseBook(id);
+        return "redirect:/books/" + id;
     }
 
     @GetMapping("/new")
@@ -86,17 +99,5 @@ public class BooksController {
     public String deleteBook(@PathVariable("id") int id) {
         bookDAO.deleteBook(id);
         return "redirect:/books";
-    }
-
-    @PatchMapping("/{id}/assign")
-    public String assignBook(@PathVariable("id") int bookId, @ModelAttribute("person") Person person) {
-        bookDAO.assignBook(bookId, person.getId());
-        return "redirect:/books/" + bookId;
-    }
-
-    @PatchMapping("/{id}/release")
-    public String releaseBook(@PathVariable("id") int id) {
-        bookDAO.releaseBook(id);
-        return "redirect:/books/" + id;
     }
 }

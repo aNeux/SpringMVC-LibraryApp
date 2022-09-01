@@ -43,6 +43,6 @@ public class PersonDAO {
     }
 
     public void deletePerson(int id) {
-        jdbcTemplate.update("delete from person where id = ?" , id);
+        jdbcTemplate.update("delete from person where id = ?", id);
     }
 }

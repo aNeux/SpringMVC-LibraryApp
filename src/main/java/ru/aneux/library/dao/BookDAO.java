@@ -32,11 +32,6 @@ public class BookDAO {
         return jdbcTemplate.query("select * from book where id = ?", bookRowMapper, id).stream().findAny().orElse(null);
     }
 
-    public boolean checkBookExistence(Book book) {
-        return !jdbcTemplate.query("select * from book where title = ? and author = ? and publishing_year = ?",
-                bookRowMapper, book.getTitle(), book.getAuthor(), book.getPublishingYear()).isEmpty();
-    }
-
     public Person getAttachedPerson(int bookId) {
         return jdbcTemplate.query("select person.* from book join person on book.attached_person = person.id where book.id = ?",
                 new BeanPropertyRowMapper<>(Person.class), bookId).stream().findAny().orElse(null);
@@ -48,6 +43,11 @@ public class BookDAO {
 
     public void releaseBook(int bookId) {
         jdbcTemplate.update("update book set attached_person = NULL where id = ?", bookId);
+    }
+
+    public boolean checkBookExistence(Book book) {
+        return !jdbcTemplate.query("select * from book where title = ? and author = ? and publishing_year = ?",
+                bookRowMapper, book.getTitle(), book.getAuthor(), book.getPublishingYear()).isEmpty();
     }
 
     public Integer addBook(Book book) {

@@ -16,18 +16,18 @@ import javax.validation.Valid;
 @RequestMapping("/people")
 public class PeopleController {
     private final PersonDAO personDAO;
-    private final BookDAO bookDAO;
-
     private final PersonValidator personValidator;
 
+    private final BookDAO bookDAO;
+
     @Autowired
-    public PeopleController(PersonDAO personDAO, BookDAO bookDAO, PersonValidator personValidator) {
+    public PeopleController(PersonDAO personDAO, PersonValidator personValidator, BookDAO bookDAO) {
         this.personDAO = personDAO;
-        this.bookDAO = bookDAO;
         this.personValidator = personValidator;
+        this.bookDAO = bookDAO;
     }
 
-    @GetMapping()
+    @GetMapping
     public String indexPage(Model model) {
         model.addAttribute("people", personDAO.getPeople());
         return "people/index";

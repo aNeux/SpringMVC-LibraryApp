@@ -16,10 +16,10 @@
             </div>
         </div>
         <hr/>
-        <form th:method="GET" th:action="@{/people/{id}/edit(id = ${person.getId()})}">
+        <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
             <input type="submit" value="Редактировать">
         </form>
-        <form th:method="DELETE" th:action="@{/people/{id}(id = ${person.getId()})}" style="margin-top: 10px;">
+        <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}" style="margin-top: 10px;">
             <input type="submit" value="Удалить">
         </form>
     </body>
