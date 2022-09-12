@@ -30,7 +30,7 @@ public class BooksController {
     @GetMapping
     public String index(@RequestParam(value = "page", required = false) Integer page,
                         @RequestParam(value = "books_per_page", required = false) Integer booksPerPage,
-                        @RequestParam(value = "sort_by_publishing_year", required = false, defaultValue = "false") boolean sortByPublishingYear,
+                        @RequestParam(value = "sort_by_publishing_year", defaultValue = "false") boolean sortByPublishingYear,
                         Model model) {
         model.addAttribute("books", page == null || booksPerPage == null ? booksService.findAll(sortByPublishingYear)
                 : booksService.findAllWithPagination(page, booksPerPage, sortByPublishingYear));
@@ -47,6 +47,14 @@ public class BooksController {
         if (book.getOwner() == null)
             model.addAttribute("people", peopleService.findAll());
         return "books/book";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam(value = "query", defaultValue = "") String query, Model model) {
+        model.addAttribute("query", query);
+        if (!query.isEmpty())
+            model.addAttribute("found_books", booksService.findBookByTitle(query));
+        return "books/search";
     }
 
     @PatchMapping("/{id}/assign")

@@ -35,6 +35,10 @@ public class BooksService {
         return booksRepository.findById(id).orElse(null);
     }
 
+    public List<Book> findBookByTitle(String titleQuery) {
+        return booksRepository.findByTitleContaining(titleQuery);
+    }
+
     public boolean checkBookExistence(Book book) {
         return !booksRepository.findByTitleAndAuthorAndPublishingYear(book.getTitle(),
                 book.getAuthor(), book.getPublishingYear()).isEmpty();
