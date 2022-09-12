@@ -1,6 +1,8 @@
 package ru.aneux.library.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aneux.library.models.Book;
@@ -19,8 +21,14 @@ public class BooksService {
         this.booksRepository = booksRepository;
     }
 
-    public List<Book> findAll() {
-        return booksRepository.findAll();
+    public List<Book> findAll(boolean sortByPublishingYear) {
+        return !sortByPublishingYear ? booksRepository.findAll() : booksRepository.findAll(Sort.by("publishingYear"));
+    }
+
+    public List<Book> findAllWithPagination(int page, int booksPerPage, boolean sortByPublishingYear) {
+        PageRequest pageRequest = !sortByPublishingYear ? PageRequest.of(page, booksPerPage)
+                : PageRequest.of(page, booksPerPage, Sort.by("publishingYear"));
+        return booksRepository.findAll(pageRequest).getContent();
     }
 
     public Book findOne(int id) {
