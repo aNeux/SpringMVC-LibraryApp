@@ -7,11 +7,11 @@
 
     <body>
         <p th:text="${person.getFullName() + ', ' + person.getBirthYear() + ' г.р.'}"></p>
-        <p th:if="${books.isEmpty()}">Человек пока не взял ни одной книги</p>
-        <div th:if="${!books.isEmpty()}">
+        <p th:if="${person.getBooks().isEmpty()}">Человек пока не взял ни одной книги</p>
+        <div th:if="${!person.getBooks().isEmpty()}">
             <hr/>
             <b>Выданные книги:</b>
-            <div th:each="book : ${books}" style="margin-top: -10px;">
+            <div th:each="book : ${person.getBooks()}" style="margin-top: -10px;">
                 <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ' (' + book.getPublishingYear() + ')'}"></p>
             </div>
         </div>

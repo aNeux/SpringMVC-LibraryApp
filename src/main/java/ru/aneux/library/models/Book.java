@@ -1,28 +1,40 @@
 package ru.aneux.library.models;
 
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
+@Entity
+@Table(name = "book")
 public class Book {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "title")
     @Size(min = 2, max = 100, message = "Название книги должно включать от 2 до 100 символов")
     private String title;
 
+    @Column(name = "author")
     @Pattern(regexp = "[а-яА-Яa-zA-Z ]{2,100}", message = "Имя автора должно включать от 2 до 100 символов")
     private String author;
 
+    @Column(name = "publishing_year")
     @NotNull(message = "Год издания должен быть указан")
     @Min(value = 0, message = "Год издания должен быть больше 0")
     private Integer publishingYear;
 
+    @ManyToOne
+    @JoinColumn(name = "attached_person", referencedColumnName = "id")
+    private Person owner;
+
     public Book() { }
 
-    public Book(int id, String title, String author, Integer publishingYear) {
-        this.id = id;
+    public Book(String title, String author, Integer publishingYear) {
         this.title = title;
         this.author = author;
         this.publishingYear = publishingYear;
@@ -58,6 +70,14 @@ public class Book {
 
     public void setPublishingYear(Integer publishingYear) {
         this.publishingYear = publishingYear;
+    }
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
     }
 
 

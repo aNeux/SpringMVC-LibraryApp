@@ -7,7 +7,7 @@
 
     <body>
         <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ' (' + book.getPublishingYear() + ')'}"></p>
-        <div th:if="${attachedPerson == null && people != null}">
+        <div th:if="${people != null}">
             <p>Эта книга сейчас свободна. Кому назначить ее?</p>
             <form th:method="PATCH" th:action="@{/books/{id}/assign(id=${book.getId()})}">
                 <label for="person_selection">Выберите человека:</label>
@@ -17,8 +17,8 @@
                 <input type="submit" value="Назначить">
             </form>
         </div>
-        <div th:if="${attachedPerson != null && people == null}">
-            <p th:text="${'Книга сейчас у: ' + attachedPerson.getFullName()}"></p>
+        <div th:if="${book.getOwner() != null}">
+            <p th:text="${'Книга сейчас у: ' + book.getOwner().getFullName()}"></p>
             <form th:method="PATCH" th:action="@{/books/{id}/release(id=${book.getId()})}">
                 <input type="submit" value="Освободить книгу">
             </form>

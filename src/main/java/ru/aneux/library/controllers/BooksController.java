@@ -5,10 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.aneux.library.dao.BookDAO;
-import ru.aneux.library.dao.PersonDAO;
 import ru.aneux.library.models.Book;
 import ru.aneux.library.models.Person;
+import ru.aneux.library.services.BooksService;
+import ru.aneux.library.services.PeopleService;
 import ru.aneux.library.util.BookValidator;
 
 import javax.validation.Valid;
@@ -16,21 +16,20 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/books")
 public class BooksController {
-    private final BookDAO bookDAO;
+    private final BooksService booksService;
     private final BookValidator bookValidator;
-
-    private final PersonDAO personDAO;
+    private final PeopleService peopleService;
 
     @Autowired
-    public BooksController(BookDAO bookDAO, BookValidator bookValidator, PersonDAO personDAO) {
-        this.bookDAO = bookDAO;
+    public BooksController(BookValidator bookValidator, BooksService booksService, PeopleService peopleService) {
+        this.booksService = booksService;
         this.bookValidator = bookValidator;
-        this.personDAO = personDAO;
+        this.peopleService = peopleService;
     }
 
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("books", bookDAO.getBooks());
+        model.addAttribute("books", booksService.findAll());
         return "books/index";
     }
 
@@ -39,24 +38,22 @@ public class BooksController {
         // FIXME: For some reason using @ModelAttribute annotation for Person object here change the default selection in the drop-down menu
         model.addAttribute("person", new Person());
 
-        model.addAttribute("book", bookDAO.getBook(id));
-        Person attachedPerson = bookDAO.getAttachedPerson(id);
-        if (attachedPerson != null)
-            model.addAttribute("attachedPerson", attachedPerson);
-        else
-            model.addAttribute("people", personDAO.getPeople());
+        Book book = booksService.findOne(id);
+        model.addAttribute("book", book);
+        if (book.getOwner() == null)
+            model.addAttribute("people", peopleService.findAll());
         return "books/book";
     }
 
     @PatchMapping("/{id}/assign")
     public String assignBook(@PathVariable("id") int bookId, @ModelAttribute("person") Person person) {
-        bookDAO.assignBook(bookId, person.getId());
+        booksService.assignBook(bookId, person);
         return "redirect:/books/" + bookId;
     }
 
     @PatchMapping("/{id}/release")
     public String releaseBook(@PathVariable("id") int id) {
-        bookDAO.releaseBook(id);
+        booksService.releaseBook(id);
         return "redirect:/books/" + id;
     }
 
@@ -71,13 +68,12 @@ public class BooksController {
         if (bindingResult.hasErrors())
             return "books/new_book";
 
-        Integer id = bookDAO.addBook(book);
-        return "redirect:/books" + (id != null ? "/" + id : "");
+        return "redirect:/books/" + booksService.save(book);
     }
 
     @GetMapping("/{id}/edit")
     public String editBook(@PathVariable("id") int id, Model model) {
-        model.addAttribute("book", bookDAO.getBook(id));
+        model.addAttribute("book", booksService.findOne(id));
         return "books/edit_book";
     }
 
@@ -85,19 +81,17 @@ public class BooksController {
     public String updateBook(@PathVariable("id") int id, @ModelAttribute("book") @Valid Book book,
                              BindingResult bindingResult) {
         // Check if we should do additional validation (if book's parameters have been changed)
-        if (!book.equals(bookDAO.getBook(id)))
+        if (!book.equals(booksService.findOne(id)))
             bookValidator.validate(book, bindingResult);
-
         if (bindingResult.hasErrors())
             return "books/edit_book";
 
-        bookDAO.updateBook(book);
-        return "redirect:/books/" + id;
+        return "redirect:/books/" + booksService.save(book);
     }
 
     @DeleteMapping("/{id}")
     public String deleteBook(@PathVariable("id") int id) {
-        bookDAO.deleteBook(id);
+        booksService.delete(id);
         return "redirect:/books";
     }
 }
