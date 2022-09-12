@@ -16,7 +16,10 @@
             <p th:if="${found_books.isEmpty()}">По вашему запросу ничего не найдено</p>
             <div th:each="book : ${found_books}">
                 <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ' (' + book.getPublishingYear() + ')'}"></p>
-                <p th:text="${book.getOwner() != null ? 'Книга сейчас у: ' + book.getOwner().getFullName() : 'Книга свободна'}"></p>
+                <p th:if="${book.getOwner() == null}">Книга свободна</p>
+                <p th:if="${book.getOwner() != null}">Книга сейчас у:
+                    <a th:href="@{/people/{id}(id=${book.getOwner().getId()})}" th:text="${book.getOwner().getFullName()}"></a>
+                </p>
                 <hr>
             </div>
         </div>

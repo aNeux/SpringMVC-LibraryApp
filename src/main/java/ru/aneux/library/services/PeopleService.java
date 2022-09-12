@@ -4,9 +4,11 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.aneux.library.models.Book;
 import ru.aneux.library.models.Person;
 import ru.aneux.library.repositories.PeopleRepository;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,8 +27,12 @@ public class PeopleService {
 
     public Person findOne(int id, boolean initBooks) {
         Person person = peopleRepository.findById(id).orElse(null);
-        if (person != null && initBooks)
+        if (person != null && initBooks) {
             Hibernate.initialize(person.getBooks());
+            int tenDaysMillis = 10 * 24 * 60 * 60 * 1000;
+            for (Book book : person.getBooks())
+                book.setExpired(new Date().getTime() - book.getTakenAt().getTime() > tenDaysMillis);
+        }
         return person;
     }
 

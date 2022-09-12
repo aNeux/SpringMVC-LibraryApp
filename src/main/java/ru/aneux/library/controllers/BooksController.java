@@ -53,7 +53,7 @@ public class BooksController {
     public String search(@RequestParam(value = "query", defaultValue = "") String query, Model model) {
         model.addAttribute("query", query);
         if (!query.isEmpty())
-            model.addAttribute("found_books", booksService.findBookByTitle(query));
+            model.addAttribute("found_books", booksService.findBooksByTitle(query));
         return "books/search";
     }
 
@@ -93,11 +93,15 @@ public class BooksController {
     public String updateBook(@PathVariable("id") int id, @ModelAttribute("book") @Valid Book book,
                              BindingResult bindingResult) {
         // Check if we should do additional validation (if book's parameters have been changed)
-        if (!book.equals(booksService.findOne(id)))
+        Book originBook = booksService.findOne(id);
+        if (!book.equals(originBook))
             bookValidator.validate(book, bindingResult);
         if (bindingResult.hasErrors())
             return "books/edit_book";
 
+        // Set necessary fields not-applied in the form
+        book.setOwner(originBook.getOwner());
+        book.setTakenAt(originBook.getTakenAt());
         return "redirect:/books/" + booksService.save(book);
     }
 

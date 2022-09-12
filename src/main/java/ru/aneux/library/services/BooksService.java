@@ -9,7 +9,9 @@ import ru.aneux.library.models.Book;
 import ru.aneux.library.models.Person;
 import ru.aneux.library.repositories.BooksRepository;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,7 +37,7 @@ public class BooksService {
         return booksRepository.findById(id).orElse(null);
     }
 
-    public List<Book> findBookByTitle(String titleQuery) {
+    public List<Book> findBooksByTitle(String titleQuery) {
         return booksRepository.findByTitleContaining(titleQuery);
     }
 
@@ -51,12 +53,22 @@ public class BooksService {
 
     @Transactional
     public void assignBook(int bookId, Person person) {
-        booksRepository.findById(bookId).ifPresent(b -> b.setOwner(person));
+        Optional<Book> bookOptional = booksRepository.findById(bookId);
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            book.setOwner(person);
+            book.setTakenAt(new Date());
+        }
     }
 
     @Transactional
     public void releaseBook(int id) {
-        booksRepository.findById(id).ifPresent(b -> b.setOwner(null));
+        Optional<Book> bookOptional = booksRepository.findById(id);
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            book.setOwner(null);
+            book.setTakenAt(null);
+        }
     }
 
     @Transactional

@@ -6,21 +6,21 @@
     </head>
 
     <body>
-        <p th:text="${person.getFullName() + ', ' + person.getBirthYear() + ' г.р.'}"></p>
-        <p th:if="${person.getBooks().isEmpty()}">Человек пока не взял ни одной книги</p>
-        <div th:if="${!person.getBooks().isEmpty()}">
-            <hr/>
-            <b>Выданные книги:</b>
-            <div th:each="book : ${person.getBooks()}" style="margin-top: -10px;">
-                <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ' (' + book.getPublishingYear() + ')'}"></p>
-            </div>
-        </div>
-        <hr/>
-        <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
+        <span th:text="${person.getFullName() + ', ' + person.getBirthYear() + ' г.р.'}"></span>
+        <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}" style="display: inline-block; margin-left: 10px;">
             <input type="submit" value="Редактировать">
         </form>
-        <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}" style="margin-top: 10px;">
+        <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}" style="display: inline-block; margin-left: 5px;">
             <input type="submit" value="Удалить">
         </form>
+        <hr/>
+        <span th:if="${person.getBooks().isEmpty()}">Человек пока не взял ни одной книги</span>
+        <div th:if="${!person.getBooks().isEmpty()}">
+            <b>Выданные книги:</b>
+            <div th:each="book : ${person.getBooks()}">
+                <a th:href="@{/books/{id}(id=${book.getId()})}" th:style="${book.isExpired() ? 'color: red;' : ''}"
+                   th:text="${book.getTitle() + ', ' + book.getAuthor() + ' (' + book.getPublishingYear() + ')'}"></a>
+            </div>
+        </div>
     </body>
 </html>

@@ -5,6 +5,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -28,16 +29,24 @@ public class Book {
     @Min(value = 0, message = "Год издания должен быть больше 0")
     private Integer publishingYear;
 
+    @Column(name = "taken_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date takenAt;
+
+    @Transient
+    private boolean expired;
+
     @ManyToOne
     @JoinColumn(name = "attached_person", referencedColumnName = "id")
     private Person owner;
 
     public Book() { }
 
-    public Book(String title, String author, Integer publishingYear) {
+    public Book(String title, String author, Integer publishingYear, Date takenAt) {
         this.title = title;
         this.author = author;
         this.publishingYear = publishingYear;
+        this.takenAt = takenAt;
     }
 
     public int getId() {
@@ -70,6 +79,22 @@ public class Book {
 
     public void setPublishingYear(Integer publishingYear) {
         this.publishingYear = publishingYear;
+    }
+
+    public Date getTakenAt() {
+        return takenAt;
+    }
+
+    public void setTakenAt(Date takenAt) {
+        this.takenAt = takenAt;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 
     public Person getOwner() {
