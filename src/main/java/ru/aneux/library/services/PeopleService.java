@@ -14,44 +14,44 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class PeopleService {
-    private final PeopleRepository peopleRepository;
+	private final PeopleRepository peopleRepository;
 
-    @Autowired
-    public PeopleService(PeopleRepository peopleRepository) {
-        this.peopleRepository = peopleRepository;
-    }
+	@Autowired
+	public PeopleService(PeopleRepository peopleRepository) {
+		this.peopleRepository = peopleRepository;
+	}
 
-    public List<Person> findAll() {
-        return peopleRepository.findAll();
-    }
+	public List<Person> findAll() {
+		return peopleRepository.findAll();
+	}
 
-    public Person findOne(int id, boolean initBooks) {
-        Person person = peopleRepository.findById(id).orElse(null);
-        if (person != null && initBooks) {
-            Hibernate.initialize(person.getBooks());
-            int tenDaysMillis = 10 * 24 * 60 * 60 * 1000;
-            for (Book book : person.getBooks())
-                book.setExpired(new Date().getTime() - book.getTakenAt().getTime() > tenDaysMillis);
-        }
-        return person;
-    }
+	public Person findOne(int id, boolean initBooks) {
+		Person person = peopleRepository.findById(id).orElse(null);
+		if (person != null && initBooks) {
+			Hibernate.initialize(person.getBooks());
+			int tenDaysMillis = 10 * 24 * 60 * 60 * 1000;
+			for (Book book : person.getBooks())
+				book.setExpired(new Date().getTime() - book.getTakenAt().getTime() > tenDaysMillis);
+		}
+		return person;
+	}
 
-    public Person findOne(int id) {
-        return findOne(id, false);
-    }
+	public Person findOne(int id) {
+		return findOne(id, false);
+	}
 
-    public boolean checkPersonExistenceByFullName(Person person) {
-        return !peopleRepository.findByFirstNameAndSecondNameAndLastName(person.getFirstName(),
-                person.getSecondName(), person.getLastName()).isEmpty();
-    }
+	public boolean checkPersonExistenceByFullName(Person person) {
+		return !peopleRepository.findByFirstNameAndSecondNameAndLastName(person.getFirstName(),
+				person.getSecondName(), person.getLastName()).isEmpty();
+	}
 
-    @Transactional
-    public int save(Person person) {
-        return peopleRepository.save(person).getId();
-    }
+	@Transactional
+	public int save(Person person) {
+		return peopleRepository.save(person).getId();
+	}
 
-    @Transactional
-    public void delete(int id) {
-        peopleRepository.deleteById(id);
-    }
+	@Transactional
+	public void delete(int id) {
+		peopleRepository.deleteById(id);
+	}
 }

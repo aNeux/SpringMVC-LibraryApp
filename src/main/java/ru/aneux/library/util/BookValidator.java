@@ -9,21 +9,21 @@ import ru.aneux.library.services.BooksService;
 
 @Component
 public class BookValidator implements Validator {
-    private final BooksService booksService;
+	private final BooksService booksService;
 
-    @Autowired
-    public BookValidator(BooksService booksService) {
-        this.booksService = booksService;
-    }
+	@Autowired
+	public BookValidator(BooksService booksService) {
+		this.booksService = booksService;
+	}
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return Book.class.equals(clazz);
-    }
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return Book.class.equals(clazz);
+	}
 
-    @Override
-    public void validate(Object target, Errors errors) {
-        if (booksService.checkBookExistence((Book) target))
-            errors.reject("", "Такая книга уже есть в библиотеке");
-    }
+	@Override
+	public void validate(Object target, Errors errors) {
+		if (booksService.checkBookExistence((Book) target))
+			errors.reject("", "Такая книга уже есть в библиотеке");
+	}
 }

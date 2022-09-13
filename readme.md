@@ -1,16 +1,16 @@
-Simple Spring Web-MVC application
-=================================
+Simple Spring Boot application
+==============================
 
 ## About
 
-This project has been made due to corresponding course of learning the Spring framework.
-Please see the commit history to find how the program has evolved over the time. 
+This project has been made due to corresponding course of learning the Spring framework. Please see the commit history
+to find how the program has evolved over the time. 
 
-Basically, it is a simple CRUD application which is an information system of a certain library with the ability
+Basically, it is a simple CRUD application which is an informational system of a certain library with the ability
 to add readers (particular persons), books and assign the latter to the first.
 
-Example **properties** file for describing the Hibernate settings is placed at *src/main/resources/hibernate.properties.origin*
-(please, remove *origin* suffix after setup).
+To set up your database connection, please edit file *src/main/resources/application.properties* with necessary credentials.
+Driver class and used dialect should be specified there too.
 
 Also, to prepare your database you can go to *init_postgres.sql* file and query all the statements.
 **Be carefully**: queries in that file are prepared to be used with *PostgreSQL*, as mentioned in its name.

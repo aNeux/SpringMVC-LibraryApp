@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PeopleRepository extends JpaRepository<Person, Integer> {
-    List<Person> findByFirstNameAndSecondNameAndLastName(String firstName, String secondName, String lastName);
+	List<Person> findByFirstNameAndSecondNameAndLastName(String firstName, String secondName, String lastName);
 }

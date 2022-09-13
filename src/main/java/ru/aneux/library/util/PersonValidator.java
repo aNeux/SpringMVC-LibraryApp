@@ -9,22 +9,22 @@ import ru.aneux.library.services.PeopleService;
 
 @Component
 public class PersonValidator implements Validator {
-    private final PeopleService peopleService;
+	private final PeopleService peopleService;
 
-    @Autowired
-    public PersonValidator(PeopleService peopleService) {
-        this.peopleService = peopleService;
-    }
+	@Autowired
+	public PersonValidator(PeopleService peopleService) {
+		this.peopleService = peopleService;
+	}
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return Person.class.equals(clazz);
-    }
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return Person.class.equals(clazz);
+	}
 
-    @Override
-    public void validate(Object target, Errors errors) {
-        if (peopleService.checkPersonExistenceByFullName((Person) target)) {
-            errors.reject("", "Пользователь с таким ФИО уже существует");
-        }
-    }
+	@Override
+	public void validate(Object target, Errors errors) {
+		if (peopleService.checkPersonExistenceByFullName((Person) target)) {
+			errors.reject("", "Пользователь с таким ФИО уже существует");
+		}
+	}
 }
