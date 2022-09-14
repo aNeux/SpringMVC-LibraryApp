@@ -6,7 +6,7 @@
     </head>
 
     <body>
-        <form th:method="POST" th:action="@{/books/}" th:object="${book}">
+        <form th:method="POST" th:action="@{/books}" th:object="${book}">
             <label for="title">Название:</label>
             <input id="title" type="text" th:field="*{title}" style="margin-top: 5px;">
             <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>

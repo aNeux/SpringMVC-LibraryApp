@@ -58,8 +58,7 @@ public class PeopleController {
 	public String updatePerson(@PathVariable("id") int id, @ModelAttribute("person") @Valid Person person,
 							   BindingResult bindingResult) {
 		// If full name has been changed, it is needed to check new one to be unique
-		Person originPerson = peopleService.findOne(id);
-		if (originPerson != null && !originPerson.getFullName().equals(person.getFullName()))
+		if (!person.getFullName().equals(peopleService.findOne(id).getFullName()))
 			personValidator.validate(person, bindingResult);
 		if (bindingResult.hasErrors())
 			return "people/edit_person";

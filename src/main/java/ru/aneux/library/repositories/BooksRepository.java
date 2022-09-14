@@ -5,9 +5,10 @@ import org.springframework.stereotype.Repository;
 import ru.aneux.library.models.Book;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BooksRepository extends JpaRepository<Book, Integer> {
-	List<Book> findByTitleAndAuthorAndPublishingYear(String title, String author, int publishingYear);
+	Optional<Book> findByTitleAndAuthorAndPublishingYear(String title, String author, int publishingYear);
 	List<Book> findByTitleContaining(String titleQuery);
 }

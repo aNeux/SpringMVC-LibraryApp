@@ -29,6 +29,7 @@ public class PeopleService {
 		Person person = peopleRepository.findById(id).orElse(null);
 		if (person != null && initBooks) {
 			Hibernate.initialize(person.getBooks());
+			// Check if any book has expired for certain holder
 			int tenDaysMillis = 10 * 24 * 60 * 60 * 1000;
 			for (Book book : person.getBooks())
 				book.setExpired(new Date().getTime() - book.getTakenAt().getTime() > tenDaysMillis);
@@ -41,8 +42,8 @@ public class PeopleService {
 	}
 
 	public boolean checkPersonExistenceByFullName(Person person) {
-		return !peopleRepository.findByFirstNameAndSecondNameAndLastName(person.getFirstName(),
-				person.getSecondName(), person.getLastName()).isEmpty();
+		return peopleRepository.findByFirstNameAndSecondNameAndLastName(
+				person.getFirstName(), person.getSecondName(), person.getLastName()).isPresent();
 	}
 
 	@Transactional

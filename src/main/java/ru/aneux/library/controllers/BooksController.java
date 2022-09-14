@@ -29,7 +29,7 @@ public class BooksController {
 	@GetMapping
 	public String index(@RequestParam(value = "page", required = false) Integer page,
 						@RequestParam(value = "books_per_page", required = false) Integer booksPerPage,
-						@RequestParam(value = "sort_by_publishing_year", defaultValue = "false") boolean sortByPublishingYear,
+						@RequestParam(value = "sort_by_publishing_year", required = false) boolean sortByPublishingYear,
 						Model model) {
 		model.addAttribute("books", page == null || booksPerPage == null ? booksService.findAll(sortByPublishingYear)
 				: booksService.findAllWithPagination(page, booksPerPage, sortByPublishingYear));
@@ -38,7 +38,8 @@ public class BooksController {
 
 	@GetMapping("/{id}")
 	public String showBook(@PathVariable("id") int id, Model model) {
-		// FIXME: For some reason using @ModelAttribute annotation for Person object here change the default selection in the drop-down menu
+		// As @ModelAttribute sets id for newly created Person object (from @PathVariable value), which causes strange
+		// behaviour in the drop-down menu, we should manually create that person by constructor and pass it to the model
 		model.addAttribute("person", new Person());
 
 		Book book = booksService.findOne(id);
@@ -98,7 +99,7 @@ public class BooksController {
 		if (bindingResult.hasErrors())
 			return "books/edit_book";
 
-		// Set necessary fields not-applied in the form
+		// Set additional fields that weren't applied in the form
 		book.setOwner(originBook.getOwner());
 		book.setTakenAt(originBook.getTakenAt());
 		return "redirect:/books/" + booksService.save(book);
